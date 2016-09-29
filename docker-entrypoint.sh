@@ -3,8 +3,17 @@
 set -e
 
 cmd="$@"
+host="db"
+dbname="subrosa"
+user="subrosa_user"
+password="secret"
 
-echo "CMD:  $cmd"
+until psql "host=$host dbname=$dbname user=$user password=$password" -c '\l'; do
+  >&2 echo "Postgres is unavailable - sleeping"
+  sleep 1
+done
+
+>&2 echo "Postgres is up - executing command"
 
 pushd "/code/subrosa"
 
